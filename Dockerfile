@@ -1,6 +1,6 @@
 FROM ubuntu:saucy
 RUN apt-get update
-RUN apt-get install -qy nodejs git build-essential python jq
+RUN apt-get install -y nodejs git build-essential python jq
 ADD ./startcjdns.sh /bin/startcjdns
 ADD ./addeth.py /opt/addeth.py
 ADD ./makeconfig.sh /tmp/makeconfig.sh
