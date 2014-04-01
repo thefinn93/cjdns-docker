@@ -5,6 +5,7 @@ import os
 
 conf = json.load(open(sys.argv[1]))
 
+
 existingifaces = []
 if "ETHInterface" in conf['interfaces']:
     for interface in conf['interfaces']['ETHInterface']:
@@ -15,11 +16,12 @@ else:
 for dev in os.listdir("/sys/class/net"):
     if not dev in existingifaces:
         # What is a good way to detect physical vs virtual devices? I highly doubt this is way is any good
-        if open("/sys/class/net/%s/type" % dev).read() == "1":
+        iftype =  open("/sys/class/net/%s/type" % dev).read().strip()
+        if iftype == "1":
             print "Adding ETHInterface to %s" % dev
             conf['interfaces']['ETHInterface'].append({"connectTo": {}, "bind": dev, "beacon": 2})
         else:
-            print "Ignoring %s because it is a virtual interface or something weird" % dev
+            print "Ignoring %s because it is a virtual interface or something weird (%s)" % (dev, iftype)
     else:
         print "ETHInterface already set up for %s" % dev
 
