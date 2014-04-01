@@ -5,7 +5,7 @@ import os
 
 conf = json.load(open(sys.argv[1]))
 
-
+## First, add all ethernet interfaces that are of type 1
 existingifaces = []
 if "ETHInterface" in conf['interfaces']:
     for interface in conf['interfaces']['ETHInterface']:
@@ -25,8 +25,21 @@ for dev in os.listdir("/sys/class/net"):
     else:
         print "ETHInterface already set up for %s" % dev
 
-conf['noBackground'] = 1
+# Next update the config based on the settings in settings/config.json (or ./config.json.dist if that fails)
+try:
+    conf.update(json.load(open("/tmp/settings/config.json")))
+except ValueError, IOError:
+    conf.update(json.load(open("/tmp/config.json")))
 
+# Finally, add any UDP peers that may be in /tmp/peers
+if os.path.isdir("/tmp/settings/peers"):
+    for peerfile in os.listdir("/tmp/settings/peers"):
+        try:
+            peers = json.load(open("/tmp/settings/peers/%s" % peerfile))
+            for peer in peers:
+                conf['interfaces']['UDPInterface'][0]['connectTo'][peer] = peers[peer]
+        except ValueError as e:
+            print "Failed to add %s (%s)" % (peerfile, e)
 save = open(sys.argv[1], "w")
 save.write(json.dumps(conf, sort_keys=True, indent=4, separators=(',', ': ')))
 save.close()
