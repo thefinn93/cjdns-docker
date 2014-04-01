@@ -15,11 +15,11 @@ else:
 for dev in os.listdir("/sys/class/net"):
     if not dev in existingifaces:
         # What is a good way to detect physical vs virtual devices? I highly doubt this is way is any good
-        if not "virtual" in os.path.realpath("/sys/class/net/%s" % dev):
+        if open("/sys/class/net/%s/type" % dev).read() == "1":
             print "Adding ETHInterface to %s" % dev
             conf['interfaces']['ETHInterface'].append({"connectTo": {}, "bind": dev, "beacon": 2})
         else:
-            print "Ignoring %s because it is a virtual interface" % dev
+            print "Ignoring %s because it is a virtual interface or something weird" % dev
     else:
         print "ETHInterface already set up for %s" % dev
 
