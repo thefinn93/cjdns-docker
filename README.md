@@ -40,5 +40,5 @@ an example. Note that the `.dist` file is used if no `config.json` file is
 found.
 
 # Todo:
-* ETH autopeering
+* functional ETH autopeering
 * expose admin interface maybe?
