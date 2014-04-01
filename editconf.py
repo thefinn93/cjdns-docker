@@ -29,17 +29,15 @@ for dev in os.listdir("/sys/class/net"):
 try:
     conf.update(json.load(open("/tmp/settings/config.json")))
 except ValueError, IOError:
-    conf.update(json.load(open("/tmp/config.json")))
+    conf.update(json.load(open("/tmp/settings/config.json.dist")))
 
-# Finally, add any UDP peers that may be in /tmp/peers
-if os.path.isdir("/tmp/settings/peers"):
-    for peerfile in os.listdir("/tmp/settings/peers"):
-        try:
-            peers = json.load(open("/tmp/settings/peers/%s" % peerfile))
-            for peer in peers:
-                conf['interfaces']['UDPInterface'][0]['connectTo'][peer] = peers[peer]
-        except ValueError as e:
-            print "Failed to add %s (%s)" % (peerfile, e)
+# Finally, add any UDP peers that may be in /tmp/settings/peers
+try:
+    peers = json.load(open("/tmp/settings/peers.json"))
+    for peer in peers:
+        conf['interfaces']['UDPInterface'][0]['connectTo'][peer] = peers[peer]
+except ValueError as e:
+    print "Failed to add %s (%s)" % (peerfile, e)
 save = open(sys.argv[1], "w")
 save.write(json.dumps(conf, sort_keys=True, indent=4, separators=(',', ': ')))
 save.close()
