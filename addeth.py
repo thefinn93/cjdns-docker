@@ -25,6 +25,8 @@ for dev in os.listdir("/sys/class/net"):
     else:
         print "ETHInterface already set up for %s" % dev
 
+conf['noBackground'] = 1
+
 save = open(sys.argv[1], "w")
 save.write(json.dumps(conf, sort_keys=True, indent=4, separators=(',', ': ')))
 save.close()

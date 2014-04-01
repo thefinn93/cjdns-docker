@@ -22,6 +22,8 @@ if ! [ -e $CJDROUTECONF ]; then
 fi
 
 # Add all ethernet devices to the ETHInterface, enable auto-pering on them
+# This script also sets noBackground: 1, simply because it was the easiest
+# plce to put it. JSON in bash is hard :(
 /opt/addeth.py $CJDROUTECONF
 
 $CJDROUTE < $CJDROUTECONF
