@@ -1,3 +1,5 @@
 {
-    "noBackground": 1
+    "admin": {
+      "bind": "0.0.0.0:11234"
+    }
 }
